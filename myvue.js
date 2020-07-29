@@ -1,3 +1,14 @@
+const complieUtil = {
+  text(node, expr, vm) {
+
+  },
+  html(node, expr, vm) {
+    
+  },
+  model(node, expr, vm) {
+    
+  }
+}
 class Compile {
   constructor(el, vm) {
     this.el = this.isElementNode(el) ? el : document.querySelector(el)
@@ -25,12 +36,23 @@ class Compile {
   }
 
   compileElement(node) {
-
-
+    const { attributes } = node;
+    [...attributes].forEach((attr) => {
+      const { name, value } = attr
+      if(this.isDirective(name)){
+        const [,directive] = name.split('-')
+        const [dirName, eventName] = directive.split(':')
+        complieUtil[dirName](node, value, this.vm, eventName)
+      }
+    })
   }
 
   compileText(text) {
     
+  }
+
+  isDirective(attrName) {
+    return attrName.startsWith('v-')
   }
 
   node2Fargment(el) {
